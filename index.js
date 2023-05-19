@@ -38,6 +38,11 @@ async function run() {
       res.send(result);
     })
 
+    app.get('/my-toys', async (req, res) => {
+      const mail = req.query.sellerEmail;
+      console.log(mail);
+    })
+
     app.post('/users', async (req, res) => {
       const user = req.body;
       const result = await toyCollection.insertOne(user)
