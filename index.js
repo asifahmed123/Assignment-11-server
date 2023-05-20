@@ -26,7 +26,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const toyCollection = client.db('toyHavenDB').collection('toys');
 
@@ -35,6 +35,13 @@ async function run() {
       console.log(toyCategory);
       const query = { category: toyCategory }
       const result = await toyCollection.find(query).toArray();
+      res.send(result);
+    })
+
+    app.get('/toys/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await toyCollection.findOne(query);
       res.send(result);
     })
 
@@ -54,18 +61,19 @@ async function run() {
 
     app.patch('/toys/:id', async (req, res) => {
       const id = req.params.id;
-      const filter = {_id: new ObjectId(id)}
-      const updatedToy = req.body;
-      console.log(updatedToy.description);
+      const filter = { _id: new ObjectId(id) }
+      const {price, quantity, description} = req.body;
+      console.log(price, quantity, description);
       const updateDoc = {
         $set: {
-          price: updatedToy.price,
-          quantity: updatedToy.quantity,
-          description: updatedToy.description
+          price: price,
+          quantity: quantity,
+          description: description
         },
       };
+      const options = { multi: true };
 
-      const result = await toyCollection.updateOne(filter, updateDoc);
+      const result = await toyCollection.updateMany(filter, updateDoc, options);
       res.send(result)
     })
 
