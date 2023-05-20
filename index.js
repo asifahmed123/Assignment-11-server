@@ -30,7 +30,7 @@ async function run() {
 
     const toyCollection = client.db('toyHavenDB').collection('toys');
 
-    app.get('/allToys', async(req, res) => {
+    app.get('/allToys', async (req, res) => {
       const result = await toyCollection.find().limit(20).toArray();
       res.send(result);
     })
@@ -45,16 +45,17 @@ async function run() {
 
     app.get('/toys/:id', async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)}
+      const query = { _id: new ObjectId(id) }
       const result = await toyCollection.findOne(query);
       res.send(result);
     })
 
     app.get('/my-toys', async (req, res) => {
       const email = req.query.sellerEmail;
-      console.log(email);
+      const sorted = req.query.sort;
+      
       const query = { sellerEmail: email }
-      const result = await toyCollection.find(query).toArray();
+      const result = await toyCollection.find(query).sort({price: sorted}).toArray();
       res.send(result);
     })
 
@@ -67,7 +68,7 @@ async function run() {
     app.patch('/toys/:id', async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) }
-      const {price, quantity, description} = req.body;
+      const { price, quantity, description } = req.body;
       console.log(price, quantity, description);
       const updateDoc = {
         $set: {
