@@ -30,6 +30,11 @@ async function run() {
 
     const toyCollection = client.db('toyHavenDB').collection('toys');
 
+    app.get('/allToys', async(req, res) => {
+      const result = await toyCollection.find().limit(20).toArray();
+      res.send(result);
+    })
+
     app.get('/toys', async (req, res) => {
       const toyCategory = req.query.category;
       console.log(toyCategory);
