@@ -53,15 +53,15 @@ async function run() {
     app.get('/my-toys', async (req, res) => {
       const email = req.query.sellerEmail;
       const sorted = req.query.sort;
-      
+
       const query = { sellerEmail: email }
-      const result = await toyCollection.find(query).sort({price: sorted}).toArray();
+      const result = await toyCollection.find(query).sort({ price: sorted }).toArray();
       res.send(result);
     })
 
     app.post('/users', async (req, res) => {
       const user = req.body;
-      user.price=parseFloat(req.body.price)
+      user.price = parseFloat(req.body.price)
       console.log(user);
       const result = await toyCollection.insertOne(user)
       res.send(result);
@@ -74,7 +74,7 @@ async function run() {
       console.log(price, quantity, description);
       const updateDoc = {
         $set: {
-          price: parseFloat(price) ,
+          price: parseFloat(price),
           quantity: quantity,
           description: description
         },
