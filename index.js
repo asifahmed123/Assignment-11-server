@@ -61,6 +61,8 @@ async function run() {
 
     app.post('/users', async (req, res) => {
       const user = req.body;
+      user.price=parseFloat(req.body.price)
+      console.log(user);
       const result = await toyCollection.insertOne(user)
       res.send(result);
     })
@@ -72,7 +74,7 @@ async function run() {
       console.log(price, quantity, description);
       const updateDoc = {
         $set: {
-          price: price,
+          price: parseFloat(price) ,
           quantity: quantity,
           description: description
         },
